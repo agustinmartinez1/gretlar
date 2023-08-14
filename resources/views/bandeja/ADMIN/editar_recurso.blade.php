@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'GretLaR - Nuevo Recurso ADMIN')
+@section('Titulo', 'GretLaR - Editar Usuario ADMIN')
 
 @section('ContenidoPrincipal')
 
@@ -10,33 +10,36 @@
                 <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
-                    <!-- Buscador Recurso -->
-                    <h4 class="text-center display-4">Agregar Recurso</h4>
-                    <!-- Agregar Nuevo Recurso -->
+                    <!-- Buscador Agente -->
+                    <h4 class="text-center display-4">Editar Recurso</h4>
+                    <!-- Agregar Nuevo Agente -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->
                         <div class="col-md-10">
                             <!-- general form elements -->
-                            <div class="card card-lightblue">
+                            <div class="card card-green">
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        Agregar Recurso Nuevo
+                                        Editar Recurso
                                     </h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
                             
-                                <form method="POST" action="{{ route('FormNuevoRecurso') }}" class="formularioNuevoRecurso form-group">
+                                <form method="POST" action="{{ route('FormActualizarRecurso') }}" class="formularioActualizarRecurso form-group">
                                 @csrf
                                     <div class="card-body" id="NuevoAgenteContenido1" style="display:visible">
-                                        
                                         <!-- datos recursos -->
                                         <div class="form-group row">
                                             <div class="col-4">
                                                 <label for="TR">Tipo de Recurso: </label>
                                                 <select class="form-control" name="TipoRecurso" id="TipoRecurso">
                                                     @foreach ($TipoRecursos as $o )
-                                                        <option value="{{$o->idTipoRecurso}}">{{$o->Nombre_Recurso}}</option>
+                                                        @if ($o->idTipoRecurso == $Recursos[0]->idTipoRecurso)
+                                                            <option value="{{$o->idTipoRecurso}}" selected="selected">{{$o->Nombre_Recurso}}</option>
+                                                        @else
+                                                            <option value="{{$o->idTipoRecurso}}">{{$o->Nombre_Recurso}}</option>
+                                                        @endif
                                                     @endforeach    
                                                 </select>
                                             </div>
@@ -44,7 +47,11 @@
                                                 <label for="Estado">Estado: </label>
                                                 <select class="form-control" name="TipoEstado" id="TipoEstado">
                                                     @foreach ($TipoEstados as $o )
-                                                        <option value="{{$o->idTipoEstado}}">{{$o->Nombre_Estado}}</option>
+                                                        @if ($o->idTipoEstado == $Recursos[0]->idTipoEstado)
+                                                            <option value="{{$o->idTipoEstado}}" selected="selected">{{$o->Nombre_Estado}}</option>
+                                                        @else
+                                                            <option value="{{$o->idTipoEstado}}">{{$o->Nombre_Estado}}</option>
+                                                        @endif
                                                     @endforeach    
                                                 </select>
                                             </div>
@@ -52,23 +59,26 @@
                                         <div class="form-group row">
                                             <div class="col-4">
                                                 <label for="Descripcion">Descripcion: </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="Descripcion" name="Descripcion" placeholder="Ingrese descripcion del producto">
+                                                <input type="text" autocomplete="off" class="form-control" id="Descripcion" name="Descripcion" placeholder="Ingrese descripcion del producto" value="{{$Recursos[0]->Descripcion_Recurso}}">
                                             </div>
                                             <div class="col-4">
                                                 <label for="Serie">Numero de Serie: </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="NumeroSerie" name="NumeroSerie" placeholder="Ingrese numero de serie si lo conoce">
+                                                <input type="text" autocomplete="off" class="form-control" id="NumeroSerie" name="NumeroSerie" placeholder="Ingrese numero de serie si lo conoce" value="{{$Recursos[0]->Numero_Serie}}">
                                             </div>
                                             <div class="col-4">
                                                 <label for="Cantidad">Cantidad: </label>
-                                                <input type="number" autocomplete="off" class="form-control" id="Cantidad" name="Cantidad" placeholder="Ingrese cantidad de elementos">
+                                                <input type="number" autocomplete="off" class="form-control" id="Cantidad" name="Cantidad" placeholder="Ingrese cantidad de elementos" value="{{$Recursos[0]->Cantidad_Recurso}}">
                                             </div>
                                         </div>
 
-                                    </div>   
+                                      
+                                        <!-- /.card-body -->    
+                                       
+                                    </div>
                                     <!-- /.card-body -->
-
+                                    <input type="hidden" name="datId" value="{{$Recursos[0]->idRecurso}}">
                                     <div class="card-footer bg-transparent" id="NuevoAgenteContenido2" style="display:visible">
-                                        <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+                                        <button type="submit" class="btn btn-primary btn-block bg-success">Actualizar Información</button>
                                     </div>
                                 </form>
                             </div>
@@ -88,21 +98,21 @@
 
 @section('Script')
     <script src="{{ asset('js/funcionesvarias.js') }}"></script>
-        @if (session('ConfirmarNuevoRecurso')=='OK')
+        @if (session('ConfirmarActualizarRecurso')=='OK')
             <script>
             Swal.fire(
-                'Registro guardado',
-                'Se Agrego un Recurso Nuevo',
+                'Registro Actualizado',
+                'Se actualizo el Recurso Seleccionado',
                 'success'
                     )
             </script>
         @endif
     <script>
 
-    $('.formularioNuevoUsuario').submit(function(e){
+    $('.formularioActualizarUsuario').submit(function(e){
         e.preventDefault();
         Swal.fire({
-            title: 'Esta seguro de querer agregar el Usuario?',
+            title: 'Esta seguro de querer actualizar el Usuario?',
             text: "Este cambio no puede ser borrado luego, y debera ser validado por RRHH!",
             icon: 'warning',
             showCancelButton: true,

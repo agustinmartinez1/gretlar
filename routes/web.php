@@ -120,8 +120,11 @@ Route::get('/usuariosLista',[AdminController::class,'usuariosLista'])->name('usu
 
 //recursos
 Route::get('/nuevoRecurso',[AdminController::class,'nuevoRecurso'])->name('nuevoRecurso');
+Route::get('/editarRecurso/{idRecurso}',[AdminController::class,'editarRecurso'])->name('editarRecurso');
+
 Route::get('/recursosLista',[AdminController::class,'recursosLista'])->name('recursosLista');
 Route::post('/FormNuevoRecurso',[AdminController::class,'FormNuevoRecurso'])->name('FormNuevoRecurso');
+Route::post('/FormActualizarRecurso',[AdminController::class,'FormActualizarRecurso'])->name('FormActualizarRecurso');
 
 
 

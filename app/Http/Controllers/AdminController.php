@@ -210,11 +210,97 @@ class AdminController extends Controller
 
     }
     public function recursosLista(){
-        
+     //extras a enviar
+
+        //consulta de recursos, todos
+        $Recursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*'
+        )
+        ->get();
+       
+       
+        //dd($RelSubOrgAgente);
+        $datos=array(
+            'mensajeError'=>"",
+            'RecursosLista'=>$Recursos,
+            'mensajeNAV'=>'Panel de Configuración de Recursos',
+            
+        );
+        //dd($infoPlaza);
+        return view('bandeja.ADMIN.recursosLista',$datos);       
     }
 
+    public function editarRecurso($idRecurso){
+        //extras a enviar
+        $TiposDeRecursos = DB::table('tb_tipo_recursos')->get();
+        $TiposDeEstados = DB::table('tb_tipo_estados')
+        ->where(function ($query) {
+            $query->where('tb_tipo_estados.idTipoEstado', '=', 1)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 2)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 9);
+        })
+        ->get();
+ 
+        $Recursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->where('tb_recursos.idRecurso',$idRecurso) 
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*'
+        )
+        ->get();
+        $datos=array(
+            'mensajeError'=>"",
+            'mensajeNAV'=>'Panel de Modificacion de Recursos',
+            'TipoRecursos'=>$TiposDeRecursos,
+            'TipoEstados'=>$TiposDeEstados,
+            'Recursos'=>$Recursos
+        );
+        //dd($infoPlaza);
+        return view('bandeja.ADMIN.editar_recurso',$datos);
+    }
 
+    public function FormActualizarRecurso(Request $request){
 
+        //dd($request);
+        /*
+        "TipoRecurso" => "3"
+        "TipoEstado" => "1"
+        "Descripcion" => "Samsung S6 Lite"
+        "NumeroSerie" => "DSataXXX"
+        "Cantidad" => "1"
+        "datId" => "1"
+        */
+        
+        $o = RecursoModel::where('idRecurso', $request->datId)->first();
+            $o->Descripcion_Recurso = strtoupper($request->Descripcion);
+            $o->idTipoRecurso = $request->TipoRecurso;
+            $o->idTipoEstado = $request->TipoEstado;
+            $o->Numero_Serie = $request->NumeroSerie;
+            $o->Cantidad_Recurso = $request->Cantidad;
+        $o->save();
+        
+        $idRec=$request->datId;
+         return redirect("/editarRecurso/$idRec")->with('ConfirmarActualizarRecurso','OK');
+
+    }
 
 
 
