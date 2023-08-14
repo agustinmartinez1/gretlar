@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'Sage2.0 - Editar Usuario ADMIN')
+@section('Titulo', 'GretLaR - Editar Usuario ADMIN')
 
 @section('ContenidoPrincipal')
 
@@ -31,11 +31,11 @@
                                     <div class="card-body" id="NuevoAgenteContenido1" style="display:visible">
                                         <!-- Fila Apellido, Nombre y Sexo -->
                                         <div class="form-group row">
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <label for="Nombre">Nombre Completo: </label>
                                                 <input type="text" autocomplete="off" class="form-control" id="Nombre" name="Nombre" placeholder="Ingrese nombre" value="{{$Usuario[0]->Nombre}}">
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <label for="Sexo">Activo: </label>
                                                 <select class="form-control" name="Activo" id="Activo">
                                                 @if ($Usuario[0]->Activo == 'S')
@@ -46,6 +46,18 @@
                                                     <option value="N" selected="selected">NO</option>
                                                 @endif
                                                     
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="Sexo">Rol: </label>
+                                                <select class="form-control" name="Modo" id="Modo">
+                                                    @foreach ($Modos as $m )
+                                                        @if ($Usuario[0]->Modo == $m->idModo)
+                                                            <option value="{{$m->idModo}}" selected="selected">{{$m->Descripcion}}</option>
+                                                        @else
+                                                            <option value="{{$m->idModo}}">{{$m->Descripcion}}</option>
+                                                        @endif   
+                                                    @endforeach    
                                                 </select>
                                             </div>
                                         </div>

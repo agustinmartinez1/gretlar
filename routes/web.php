@@ -118,6 +118,21 @@ Route::post('/FormActualizarUsuario',[AdminController::class,'FormActualizarUsua
 
 Route::get('/usuariosLista',[AdminController::class,'usuariosLista'])->name('usuariosLista');
 
+//recursos
+Route::get('/nuevoRecurso',[AdminController::class,'nuevoRecurso'])->name('nuevoRecurso');
+Route::get('/recursosLista',[AdminController::class,'recursosLista'])->name('recursosLista');
+Route::post('/FormNuevoRecurso',[AdminController::class,'FormNuevoRecurso'])->name('FormNuevoRecurso');
+
+
+
+
+
+
+
+
+
+
+
 Route::get('/salir',[BandejaController::class,'salir'])->name('Salir');
 
 

@@ -53,7 +53,7 @@
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="{{ asset('dist/img/AdminLTELogo.png'); }}" alt="SAGE2.0" height="60" width="60">
+    <img class="animation__shake" src="{{ asset('dist/img/AdminLTELogo.png'); }}" alt="GretLaR.0" height="60" width="60">
   </div>
 
   <!--Hamburguesa-->
@@ -80,7 +80,7 @@
     <!-- Brand Logo -->
     <a href="{{route('Bandeja')}}" class="brand-link">
       <img src="{{ asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">SAGE</span>
+      <span class="brand-text font-weight-light">GretLaR</span>
     </a>
 
     <!-- Sidebar -->
@@ -220,15 +220,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{route('nuevoUsuario')}}" class="nav-link">
+                <a href="{{route('nuevoRecurso')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Nuevo Usuario</p>
+                  <p>Nuevo Recurso</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('usuariosLista')}}" class="nav-link">
+                <a href="{{route('recursosLista')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Buscar y Administrar Usuarios</p>
+                  <p>Listar Recursos Cargados</p>
                 </a>
               </li>
               

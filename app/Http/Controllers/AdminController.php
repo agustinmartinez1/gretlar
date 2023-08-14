@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\RecursoModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\UsuarioModel;
@@ -46,6 +48,13 @@ class AdminController extends Controller
         $Sexos = DB::table('tb_sexo')->get();
         $EstadosCiviles = DB::table('tb_estadosciviles')->get();
         $Nacionalidades = DB::table('tb_nacionalidad')->get();
+        $Modos = DB::table('tb_modos')
+        ->where(function ($query) {
+            $query->where('tb_modos.idModo', '=', 1)
+                ->orWhere('tb_modos.idModo', '=', 3);
+        })
+        ->get();
+
         $Usuario = DB::table('tb_usuarios')
         ->where('tb_usuarios.Modo','!=',2)
         ->where('tb_usuarios.idusuario',$idUsuario) //es and
@@ -54,7 +63,8 @@ class AdminController extends Controller
         $datos=array(
             'mensajeError'=>"",
             'mensajeNAV'=>'Panel de Creación de Usuarios',
-            'Usuario'=>$Usuario
+            'Usuario'=>$Usuario,
+            'Modos'=>$Modos
         );
         //dd($infoPlaza);
         return view('bandeja.ADMIN.editar_usuario',$datos);
@@ -72,6 +82,7 @@ class AdminController extends Controller
       "Usuario" => "Leo Loyola"         listo
       "Clave" => "123"                  listo
       "Correo" => "djmov@gmail.com"     listo
+      'Modo' se agrego
         */
        
         $o = new UsuarioModel();
@@ -82,7 +93,7 @@ class AdminController extends Controller
           $o->Email = $request->Correo;
           $o->idReparticion = 1;
           $o->Nivel = 119;
-          $o->Modo = 3;     //3 es menos que admin, 2 es para las escuelas  y 1 para admin
+          $o->Modo = 3;     //3 es STec, 2 es para las escuelas  y 1 para admin
           $o->Dependencia = 1;
         $o->save();
           
@@ -93,15 +104,26 @@ class AdminController extends Controller
 
     public function usuariosLista(){
         //extras a enviar
+        /*$Usuarios = DB::table('tb_usuarios')
+        ->where('tb_usuarios.Modo','=',1)
+        ->get();*/
+
+        //consulta trayendo un rango dado
         $Usuarios = DB::table('tb_usuarios')
-        ->where('tb_usuarios.Modo','!=',2)
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+            ->where(function ($query) {
+                $query->where('tb_usuarios.Modo', '=', 1)
+                    ->orWhere('tb_usuarios.Modo', '=', 3);
+            })
         ->get();
+       
        
         //dd($RelSubOrgAgente);
         $datos=array(
             'mensajeError'=>"",
             'UsuariosLista'=>$Usuarios,
             'mensajeNAV'=>'Panel de Configuración de Usuarios',
+            
         );
         //dd($infoPlaza);
         return view('bandeja.ADMIN.usuariosLista',$datos);
@@ -120,6 +142,7 @@ class AdminController extends Controller
       "Usuario" => "Leo Loyola"         listo
       "Clave" => "123"                  listo
       "Correo" => "djmov@gmail.com"     listo
+      'Modo se agrego
         */
         
         $o = UsuarioModel::where('idUsuario', $request->us)->first();
@@ -128,6 +151,7 @@ class AdminController extends Controller
           $o->Usuario = $request->Usuario;
           $o->Activo = $request->Activo;
           $o->Email = $request->Correo;
+          $o->Modo = $request->Modo;
         $o->save();
         
         $idUs=$request->us;
@@ -135,4 +159,90 @@ class AdminController extends Controller
          //LuiController::PlazaNueva($request->idSurOrg);
 
     }
+
+    //recursos
+    public function nuevoRecurso(){
+        //extras a enviar
+        $TiposDeRecursos = DB::table('tb_tipo_recursos')->get();
+        $TiposDeEstados = DB::table('tb_tipo_estados')
+        ->where(function ($query) {
+            $query->where('tb_tipo_estados.idTipoEstado', '=', 1)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 2)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 9);
+        })
+        ->get();
+                
+        $datos=array(
+            'mensajeError'=>"",
+            'mensajeNAV'=>'Panel de Creación de Recursos',
+            'UsuarioAdmin'=> session('idUsuario'),
+            'TipoRecursos'=>$TiposDeRecursos,
+            'TipoEstados'=>$TiposDeEstados
+        );
+
+        return view('bandeja.ADMIN.nuevo_recurso',$datos);
+    }
+
+    public function FormNuevoRecurso(Request $request){
+        //voy a omitir por ahora la comprobacion de agentes por DNI
+
+        
+        //dd($request);
+        /*
+         "_token" => "jvyhiHKVCgZiCD398icTWpPaDqpJDaYOsgjOUvdx"
+        "TipoRecurso" => "2"
+        "TipoEstado" => "1"
+        "Descripcion" => "Notebook Bangoh"
+        "NumeroSerie" => "ABC12345421"
+        "Cantidad" => "1"
+        */
+       
+        $o = new RecursoModel();
+          $o->Descripcion_Recurso = strtoupper($request->Descripcion);
+          $o->idTipoRecurso = $request->TipoRecurso;
+          $o->idTipoEstado = $request->TipoEstado;
+          $o->Numero_Serie = $request->NumeroSerie;
+          $o->Cantidad_Recurso = $request->Cantidad;
+          $o->idUsuario = session('idUsuario');
+        $o->save();
+          
+         return redirect("/nuevoRecurso")->with('ConfirmarNuevoRecurso','OK');
+
+    }
+    public function recursosLista(){
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

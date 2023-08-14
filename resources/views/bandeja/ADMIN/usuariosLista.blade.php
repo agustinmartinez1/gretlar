@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'Sage2.0 - Nuevo Usuario ADMIN')
+@section('Titulo', 'GretLaR - Nuevo Usuario ADMIN')
 
 @section('ContenidoPrincipal')
 
@@ -29,6 +29,7 @@
                                     <th>COD</th>
                                     <th>Apellido y Nombre</th>
                                     <th>Usuario(ALIAS)</th>
+                                    <th>Rol</th>
                                     <th>Clave</th>
                                     <th>Correo Electronico</th>
                                     <th>Activo</th>
@@ -38,21 +39,22 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($UsuariosLista as $nag)
-                                    <tr>
-                                        <td>{{$nag->idUsuario}}</td>
-                                        <td>{{$nag->Nombre}}</td>
-                                        <td>{{$nag->Usuario}}</td>
-                                        <td>{{$nag->Clave}}</td>
-                                        <td>{{$nag->email}}</td>
-                                        <td class="text-center">{{$nag->Activo}}</td>
-                                        <td>{{$nag->created_at}}</td>
-                                        <td>
-                                            <a href="{{route('editarUsuario',$nag->idUsuario)}}" title="Editar Usuario">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            
-                                        </td>
-                                    </tr> 
+                                         <tr>
+                                            <td>{{$nag->idUsuario}}</td>
+                                            <td>{{$nag->Nombre}}</td>
+                                            <td>{{$nag->Usuario}}</td>
+                                            <td>{{$nag->Descripcion}}</td>
+                                            <td>{{$nag->Clave}}</td>
+                                            <td>{{$nag->email}}</td>
+                                            <td class="text-center">{{$nag->Activo}}</td>
+                                            <td>{{$nag->created_at}}</td>
+                                            <td>
+                                                <a href="{{route('editarUsuario',$nag->idUsuario)}}" title="Editar Usuario">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                
+                                            </td>
+                                        </tr>                                        
                                     @endforeach
                                 
                                 </tbody>
