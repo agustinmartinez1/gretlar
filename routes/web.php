@@ -126,7 +126,14 @@ Route::get('/recursosLista',[AdminController::class,'recursosLista'])->name('rec
 Route::post('/FormNuevoRecurso',[AdminController::class,'FormNuevoRecurso'])->name('FormNuevoRecurso');
 Route::post('/FormActualizarRecurso',[AdminController::class,'FormActualizarRecurso'])->name('FormActualizarRecurso');
 
+Route::get('/selecionarEscuela',[AdminController::class,'selecionarEscuela'])->name('selecionarEscuela');
+Route::get('/asignarRecursoEscuela/{idEscuela}',[AdminController::class,'asignarRecursoEscuela'])->name('asignarRecursoEscuela');
+Route::post('/FormAgregarRec',[AdminController::class,'FormAgregarRec'])->name('FormAgregarRec');
+Route::post('/FormDevolverRec',[AdminController::class,'FormDevolverRec'])->name('FormDevolverRec');
 
+//pedidos
+Route::get('/insumosEscuela',[AdminController::class,'insumosEscuela'])->name('insumosEscuela');
+Route::post('/crearPedido',[AdminController::class,'crearPedido'])->name('crearPedido');
 
 
 

@@ -32,13 +32,13 @@
                                     <th class="text-center">Tipo de Recurso</th>
                                     <th class="text-center">Estado</th>
                                     <th class="text-center">Cantidad</th>
+                                    <th class="text-center">Observacion</th>
                                     <th class="text-center">Lo Registro?</th>
                                     <th class="text-center">Alta</th>
                                     <th class="text-center">Ver</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {{$RecursosLista->count()}}
                                     @if($RecursosLista->count() >= 1)
                                         @foreach ($RecursosLista as $nag)
                                             <tr>
@@ -54,6 +54,7 @@
                                                 @endphp
                                                 <td class="text-center bg-{{$color}}">{{$nag->Nombre_Estado}}</td>
                                                 <td class="text-center">{{$nag->Cantidad_Recurso}}</td>
+                                                <td>{{$nag->Observaciones}}</td>
                                                 <td class="text-center">{{$nag->Nombre}}({{$nag->Descripcion}})</td>
                                                 <td class="text-center">{{$nag->FechaAlta}}</td>
                                                 <td class="text-center">

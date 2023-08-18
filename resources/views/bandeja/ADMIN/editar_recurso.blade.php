@@ -31,7 +31,7 @@
                                     <div class="card-body" id="NuevoAgenteContenido1" style="display:visible">
                                         <!-- datos recursos -->
                                         <div class="form-group row">
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <label for="TR">Tipo de Recurso: </label>
                                                 <select class="form-control" name="TipoRecurso" id="TipoRecurso">
                                                     @foreach ($TipoRecursos as $o )
@@ -43,7 +43,7 @@
                                                     @endforeach    
                                                 </select>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-6">
                                                 <label for="Estado">Estado: </label>
                                                 <select class="form-control" name="TipoEstado" id="TipoEstado">
                                                     @foreach ($TipoEstados as $o )
@@ -70,7 +70,12 @@
                                                 <input type="number" autocomplete="off" class="form-control" id="Cantidad" name="Cantidad" placeholder="Ingrese cantidad de elementos" value="{{$Recursos[0]->Cantidad_Recurso}}">
                                             </div>
                                         </div>
-
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="Observacion">Observación</label><br>
+                                                <textarea class="form-control" name="Observaciones" rows="5" cols="100%">{{$Recursos[0]->Observaciones}}</textarea>
+                                            </div>
+                                        </div>
                                       
                                         <!-- /.card-body -->    
                                        

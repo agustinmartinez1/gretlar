@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PedidoModel;
 use App\Models\RecursoModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\UsuarioModel;
 use APP\Models\ReparticionModel;
+use App\Models\RepositorioModel;
 
 class AdminController extends Controller
 {
@@ -287,6 +289,7 @@ class AdminController extends Controller
         "NumeroSerie" => "DSataXXX"
         "Cantidad" => "1"
         "datId" => "1"
+        'observacion llega
         */
         
         $o = RecursoModel::where('idRecurso', $request->datId)->first();
@@ -295,6 +298,7 @@ class AdminController extends Controller
             $o->idTipoEstado = $request->TipoEstado;
             $o->Numero_Serie = $request->NumeroSerie;
             $o->Cantidad_Recurso = $request->Cantidad;
+            $o->Observaciones = $request->Observaciones;
         $o->save();
         
         $idRec=$request->datId;
@@ -302,16 +306,235 @@ class AdminController extends Controller
 
     }
 
+    public function selecionarEscuela(){
+      //extras a enviar
+        //consulta de recursos, todos
+        $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+        ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+        ->select(
+            'tb_suborganizaciones.*',
+            'tb_reparticiones.*'
+        )
+        ->get();
+
+        //consulta de recursos, todos
+        $Recursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*'
+        )
+        ->get();
+       
+       
+        $datos=array(
+            'mensajeError'=>"",
+            'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+            'mensajeNAV'=>'Panel de Configuración de Escuelas',
+            
+        );
+        return view('bandeja.ADMIN.escuelaLista',$datos);    
+    }
+
+    public function asignarRecursoEscuela($idSubOrg){
+       //extras a enviar
+
+       //busco datos de la escuela
+       $EscuelaInfo = DB::table('tb_suborganizaciones')
+        ->where('tb_suborganizaciones.idSubOrganizacion',$idSubOrg)         
+        ->get();
+
+        //consulta de recursos, todos
+        $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+        ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+        ->select(
+            'tb_suborganizaciones.*',
+            'tb_reparticiones.*'
+        )
+        ->get();
+
+        //consulta de recursos, todos
+        $Recursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*'
+        )
+        ->get();
+       
+        $MisRecursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+        ->where('tb_repositorio.idSubOrganizacion',$idSubOrg)
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*',
+            'tb_repositorio.*'
+        )
+        ->get();
+       
+        $datos=array(
+            'mensajeError'=>"",
+            'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+            'mensajeNAV'=>'Panel de Configuración de Escuelas',
+            'RecursosLista'=>$Recursos,
+            'EscuelaInfo'=>$EscuelaInfo,
+            'MisRecursos'=>$MisRecursos
+            
+        );
+        return view('bandeja.ADMIN.seleccionar_rec_escuela',$datos);         
+    }
+
+    public function FormAgregarRec(Request $request){
+        //voy a omitir por ahora la comprobacion de agentes por DNI
+
+        
+        //dd($request);
+        /*
+         "_token" => "1mDku7LPAi9ckG6wu6Hu1xOk7S2ijGlv0Gbl3i0E"
+        "recurso" => "4"
+        "sub" => "1277"
+        */
+       
+        //agrego el recurso a la escuela
+        $o = new RepositorioModel();
+          $o->idRecurso = $request->recurso;
+          $o->idSubOrganizacion = $request->sub;
+          $o->idUsuario = session('idUsuario');
+        $o->save();
+        
+        //cambio su estado
+        $o = RecursoModel::where('idRecurso', $request->recurso)->first();
+            $o->idTipoEstado = 9;
+        $o->save();
+        
+        $idSubOrg = $request->sub;
+        return redirect("/asignarRecursoEscuela/$idSubOrg")->with('ConfirmarNuevoRecursoAgregado','OK');
+
+    }
+
+    public function FormDevolverRec(Request $request){
+        //voy a omitir por ahora la comprobacion de agentes por DNI
+
+        
+        //dd($request);
+        /*
+        "_token" => "1mDku7LPAi9ckG6wu6Hu1xOk7S2ijGlv0Gbl3i0E"
+        "recurso" => "3"
+        "sub" => "1277"
+        */
+        //elimino el recurso del establecimiento
+        DB::table('tb_repositorio')
+        ->where('tb_repositorio.idRecurso', $request->recurso)
+        ->delete();
+
+        //cambio su estado a disponible
+        $o = RecursoModel::where('idRecurso', $request->recurso)->first();
+            $o->idTipoEstado = 1;
+        $o->save();
+        
+        
+        
+        $idSubOrg = $request->sub;
+        return redirect("/asignarRecursoEscuela/$idSubOrg")->with('ConfirmarNuevoRecursoDevuelto','OK');
+
+    }
 
 
+    //zona de pedidos entre escuela y sT
+    public function insumosEscuela(){
+        //extras a enviar
+ 
+        //busco datos de la escuela
+        $EscuelaInfo = DB::table('tb_suborganizaciones')
+         ->where('tb_suborganizaciones.idSubOrganizacion',session('idSubOrganizacion'))         
+         ->get();
+ 
+         //consulta de recursos, todos
+         $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+         ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+         ->select(
+             'tb_suborganizaciones.*',
+             'tb_reparticiones.*'
+         )
+         ->get();
+        
+         $MisRecursos = DB::table('tb_recursos')
+         ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+         ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+         ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+         ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+         ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+         ->where('tb_repositorio.idSubOrganizacion',session('idSubOrganizacion'))
+         ->select(
+             'tb_usuarios.*',
+             'tb_modos.*',
+             'tb_recursos.*',
+             'tb_recursos.created_at as FechaAlta',
+             'tb_tipo_recursos.*',
+             'tb_tipo_estados.*',
+             'tb_repositorio.*'
+         )
+         ->get();
+        //dd($EscuelaInfo);
+         $datos=array(
+             'mensajeError'=>"",
+             'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+             'mensajeNAV'=>'Panel de Configuración de Escuelas',
+             'EscuelaInfo'=>$EscuelaInfo,
+             'MisRecursos'=>$MisRecursos
+             
+         );
+         return view('bandeja.ADMIN.insumos_escuela',$datos);         
+     }
 
+     public function crearPedido(Request $request){
 
+        
+        dd($request);
+        /*
+         "_token" => "FbxuUNBFAYoMLcLyrmR1rnVJGcWZF21osEGqOi0V"
+        "Observaciones" => "la pantalla se apaga y prende"
+        "recurso" => "3"  
+        */
+       
+        //agrego el recurso a la escuela
+        $o = new PedidoModel();
+          $o->idRecurso = $request->recurso;
+          $o->ObservacionesPedido = $request->Observaciones;
+          $o->idUsuarioEscuela = session('idUsuario');
+        $o->save();
+        
+        //cambio su estado
+        $o = RecursoModel::where('idRecurso', $request->recurso)->first();
+            $o->idTipoEstado = 9;
+        $o->save();
+        
+        $idSubOrg = $request->sub;
+        return redirect("/asignarRecursoEscuela/$idSubOrg")->with('ConfirmarNuevoRecursoAgregado','OK');
 
-
-
-
-
-
+    }
 
 
 

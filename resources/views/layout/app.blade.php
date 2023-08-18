@@ -178,6 +178,31 @@
               
             </ul>
           </li>
+          <li class="nav-item menu-is-opening menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Gestion de pedidos
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right"><!--aqui algo--></span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('insumosEscuela')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nuevo Pedido</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('usuariosLista')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Listar Pedidos</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
         @endif
       
         @if (session('Modo')==1)
@@ -231,7 +256,12 @@
                   <p>Listar Recursos Cargados</p>
                 </a>
               </li>
-              
+              <li class="nav-item">
+                <a href="{{route('selecionarEscuela')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Asignar Rec a Escuela</p>
+                </a>
+              </li>
             </ul>
           </li>
 
@@ -418,15 +448,15 @@
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+  });
+</script>
+<script>
+  $(function () {
+    $("#example2").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+    
   });
 </script>
 </body>
