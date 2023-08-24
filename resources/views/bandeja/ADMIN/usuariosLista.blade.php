@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'Sage2.0 - Nuevo Usuario ADMIN')
+@section('Titulo', 'GretLaR - Nuevo Usuario ADMIN')
 
 @section('ContenidoPrincipal')
 
@@ -11,7 +11,13 @@
             <section class="content">
                 <div class="container-fluid">
                     <!-- Buscador Agente -->
-                    <h4 class="text-center display-4">Agregar Usuario Nuevo</h4>
+                    <h4 class="text-center display-4">Usuarios Creados</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: En esta lista, figuran los Roles: Administradores, Autogesti&oacute;n Escolar y T&eacute;cnicos.<br>
+                        Puede usar el buscador para filtrar por cualquier dato presente y puede usar la ultima columna para editar los valores de una persona especifica.
+                    </div>
                     <!-- Agregar Nuevo Agente -->
                    
                     <div class="row d-flex justify-content-center">
@@ -29,6 +35,7 @@
                                     <th>COD</th>
                                     <th>Apellido y Nombre</th>
                                     <th>Usuario(ALIAS)</th>
+                                    <th>Rol</th>
                                     <th>Clave</th>
                                     <th>Correo Electronico</th>
                                     <th>Activo</th>
@@ -38,21 +45,22 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($UsuariosLista as $nag)
-                                    <tr>
-                                        <td>{{$nag->idUsuario}}</td>
-                                        <td>{{$nag->Nombre}}</td>
-                                        <td>{{$nag->Usuario}}</td>
-                                        <td>{{$nag->Clave}}</td>
-                                        <td>{{$nag->email}}</td>
-                                        <td class="text-center">{{$nag->Activo}}</td>
-                                        <td>{{$nag->created_at}}</td>
-                                        <td>
-                                            <a href="{{route('editarUsuario',$nag->idUsuario)}}" title="Editar Usuario">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            
-                                        </td>
-                                    </tr> 
+                                         <tr>
+                                            <td>{{$nag->idUsuario}}</td>
+                                            <td>{{$nag->Nombre}}</td>
+                                            <td>{{$nag->Usuario}}</td>
+                                            <td>{{$nag->Descripcion}}</td>
+                                            <td>{{$nag->Clave}}</td>
+                                            <td>{{$nag->email}}</td>
+                                            <td class="text-center">{{$nag->Activo}}</td>
+                                            <td>{{$nag->created_at}}</td>
+                                            <td>
+                                                <a href="{{route('editarUsuario',$nag->idUsuario)}}" title="Editar Usuario">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                
+                                            </td>
+                                        </tr>                                        
                                     @endforeach
                                 
                                 </tbody>

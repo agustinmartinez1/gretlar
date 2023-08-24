@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'GretLaR - Nuevo Usuario ADMIN')
+@section('Titulo', 'GretLaR - Nuevo Recurso ADMIN')
 
 @section('ContenidoPrincipal')
 
@@ -10,14 +10,15 @@
                 <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
-                    <!-- Buscador Agente -->
-                    <h4 class="text-center display-4">Agregar Usuario Nuevo</h4>
+                    <!-- Buscador Recurso -->
+                    <h4 class="text-center display-4">Agregar Recurso</h4>
                     <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <h5><i class="icon fas fa-info"></i> Alerta</h5>
-                        Informaci&oacute;n: Todos los usuarios creados, por defecto seran del Rol T&eacute;cnico.
-                      </div>
-                    <!-- Agregar Nuevo Agente -->
+                        Informaci&oacute;n: Los recursos, son los elementos clave de toda organizaci&oacute;n, usted puede determinar que tipo de recurso crear, como se encuentra al momento de su creaci&oacute;n y sus caracter&iacute;sticas.
+
+                    </div>
+                    <!-- Agregar Nuevo Recurso -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->
                         <div class="col-md-10">
@@ -25,50 +26,51 @@
                             <div class="card card-lightblue">
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        Agregar Nuevo Usuario
+                                        Agregar Recurso Nuevo
                                     </h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
                             
-                                <form method="POST" action="{{ route('FormNuevoUsuario') }}" class="formularioNuevoUsuario form-group">
+                                <form method="POST" action="{{ route('FormNuevoRecurso') }}" class="formularioNuevoRecurso form-group">
                                 @csrf
                                     <div class="card-body" id="NuevoAgenteContenido1" style="display:visible">
                                         
-                                        <!-- Fila Apellido, Nombre y Sexo -->
+                                        <!-- datos recursos -->
                                         <div class="form-group row">
                                             <div class="col-4">
-                                                <label for="Apellido">Apellido: </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="Apellido" name="Apellido" placeholder="Ingrese apellido">
+                                                <label for="TR">Tipo de Recurso: </label>
+                                                <select class="form-control" name="TipoRecurso" id="TipoRecurso">
+                                                    @foreach ($TipoRecursos as $o )
+                                                        <option value="{{$o->idTipoRecurso}}">{{$o->Nombre_Recurso}}</option>
+                                                    @endforeach    
+                                                </select>
                                             </div>
                                             <div class="col-4">
-                                                <label for="Nombre">Nombre: </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="Nombre" name="Nombre" placeholder="Ingrese nombre">
-                                            </div>
-                                            <div class="col-4">
-                                                <label for="Sexo">Activo: </label>
-                                                <select class="form-control" name="Activo" id="Activo">
-                                                    <option value="S" selected="selected">SI</option>
-                                                    <option value="N">NO</option>
+                                                <label for="Estado">Estado: </label>
+                                                <select class="form-control" name="TipoEstado" id="TipoEstado">
+                                                    @foreach ($TipoEstados as $o )
+                                                        <option value="{{$o->idTipoEstado}}">{{$o->Nombre_Estado}}</option>
+                                                    @endforeach    
                                                 </select>
                                             </div>
                                         </div>
-
-                                        <!-- Fila CUIL, Tipo de Agente -->
                                         <div class="form-group row">
-                                            <div class="col-3">
-                                                <label for="Usuario">Usuario(ALIAS): </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="Usuario" name="Usuario" placeholder="Ingrese un nombre para su ALIAS">
+                                            <div class="col-4">
+                                                <label for="Descripcion">Descripcion: </label>
+                                                <input type="text" autocomplete="off" class="form-control" id="Descripcion" name="Descripcion" placeholder="Ingrese descripcion del producto">
                                             </div>
-                                            <div class="col-3">
-                                                <label for="Clave">Clave: </label>
-                                                <input type="text" autocomplete="off" class="form-control" id="Clave" name="Clave" placeholder="Ingrese una clave para autenficarse">
+                                            <div class="col-4">
+                                                <label for="Serie">Numero de Serie: </label>
+                                                <input type="text" autocomplete="off" class="form-control" id="NumeroSerie" name="NumeroSerie" placeholder="Ingrese numero de serie si lo conoce">
                                             </div>
-                                             <div class="col-3">
-                                                <label for="Correo">Correo Electronico: </label>
-                                                <input type="email" autocomplete="off" class="form-control" id="Correo" name="Correo" placeholder="Ingrese Correo Electronico">
+                                            <div class="col-4">
+                                                <label for="Cantidad">Cantidad: </label>
+                                                <input type="number" autocomplete="off" class="form-control" id="Cantidad" name="Cantidad" placeholder="Ingrese cantidad de elementos">
                                             </div>
-                                    </div>
+                                        </div>
+
+                                    </div>   
                                     <!-- /.card-body -->
 
                                     <div class="card-footer bg-transparent" id="NuevoAgenteContenido2" style="display:visible">
@@ -92,11 +94,11 @@
 
 @section('Script')
     <script src="{{ asset('js/funcionesvarias.js') }}"></script>
-        @if (session('ConfirmarNuevoUsuario')=='OK')
+        @if (session('ConfirmarNuevoRecurso')=='OK')
             <script>
             Swal.fire(
                 'Registro guardado',
-                'Se creo un nuevo registro de un Usuario',
+                'Se Agrego un Recurso Nuevo',
                 'success'
                     )
             </script>

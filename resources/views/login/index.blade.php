@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('Titulo', 'Sage2.0 - Autenticacion')
+@section('Titulo', 'GretLaR - Autenticacion')
 
 @section('ContenidoPrincipal')
 <body class="lock-screen" onload="startTime()">
@@ -8,12 +8,12 @@
   <div class="lock-wrapper">
 
     <div id="time" style="color:rgb(74, 71, 71)"></div>
-
-
+    
     <div class="card text-center bg-op-1">
-      <img src="{{ asset('img/seguridad.jpg');}}" alt="lock avatar"/>
+      <img src="{{ asset('img/seguridad.png');}}" style="width:200px" />
       <div class="card-body">
-        <h1><strong style="color:rgb(74, 71, 71)">Sistema <strong><strong style="color: rgb(75, 15, 15)">SAGE</strong></h1>
+        <br><br><br><br><br>
+        <h1><strong style="color:rgb(74, 71, 71)">Sistema <strong><strong style="color: rgb(75, 15, 15)">GRETLaR</strong></h1>
         <span class="locked">{{$mensajeError}}</span>
         <form role="form" class="form-group" method="POST" action="{{ route('login') }}">
           @csrf
