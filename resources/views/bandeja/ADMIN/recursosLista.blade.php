@@ -12,6 +12,12 @@
                 <div class="container-fluid">
                     <!-- Buscador Rec -->
                     <h4 class="text-center display-4">Recursos en GretLaR</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: En este panel, se podra editar un recurso, borrarlo si fuera necesario y observar sus disponibilidades
+
+                    </div>
                     <!-- Agregar Nuevo Rec -->
                    
                     <div class="row d-flex justify-content-center">
@@ -74,7 +80,9 @@
                                                     <a href="{{route('editarRecurso',$nag->idRecurso)}}" title="Editar Recurso">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                    
+                                                    <a href="{{route('eliminarRecurso',$nag->idRecurso)}}" class="EliminarRecurso{{$nag->idRecurso}}" title="Eliminar Recurso">
+                                                        <i class="fa fa-eraser text-red"></i>
+                                                    </a>
                                                 </td>
                                             </tr>                                        
                                         @endforeach
@@ -110,6 +118,16 @@
                     )
             </script>
         @endif
+
+        @if (session('ConfirmarBorradoRecurso')=='OK')
+            <script>
+            Swal.fire(
+                'Registro guardado',
+                'Se Borro un Recurso',
+                'success'
+                    )
+            </script>
+        @endif
     <script>
 
     $('.formularioNuevoUsuario').submit(function(e){
@@ -129,6 +147,24 @@
           })
     })
     
+    $('.EliminarRecurso'.{{$nag->idRecurso}}).click(function(e){
+       e.preventDefault(); 
+        Swal.fire({
+            title: 'Esta seguro de querer borrar el recurso?',
+            text: "Esta accion no tiene punto de retroceso",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, guardo el registro!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = $('.EliminarRecurso').attr('href');
+            }else{
+                return false;
+            }
+          })
+    })
 </script>
 
 @endsection

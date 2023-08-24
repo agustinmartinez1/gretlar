@@ -530,7 +530,7 @@ class AdminController extends Controller
          $datos=array(
              'mensajeError'=>"",
              'EscuelasHabilitadas'=>$EscuelasHabilitadas,
-             'mensajeNAV'=>'Panel de Configuración de Escuelas',
+             'mensajeNAV'=>'Panel de Insumos',
              'EscuelaInfo'=>$EscuelaInfo,
              'MisRecursos'=>$MisRecursos
              
@@ -755,7 +755,7 @@ class AdminController extends Controller
           $datos=array(
               'mensajeError'=>"",
               'EscuelasHabilitadas'=>$EscuelasHabilitadas,
-              'mensajeNAV'=>'Panel de Configuración de Escuelas',
+              'mensajeNAV'=>'Panel de Control de Pedidos',
               'EscuelaInfo'=>$EscuelaInfo,
               'MisRecursos'=>$MisRecursos,
               'Estados'=>$Estados
@@ -893,7 +893,7 @@ class AdminController extends Controller
           $datos=array(
               'mensajeError'=>"",
               'EscuelasHabilitadas'=>$EscuelasHabilitadas,
-              'mensajeNAV'=>'Panel de Configuración de Escuelas',
+              'mensajeNAV'=>'Panel de Control de Pedidos Completos',
               'EscuelaInfo'=>$EscuelaInfo,
               'MisRecursos'=>$MisRecursos,
               'Estados'=>$Estados
@@ -902,12 +902,47 @@ class AdminController extends Controller
           return view('bandeja.ADMIN.pedidos_terminados_st',$datos);                   
      }
 
+     public function eliminarRecurso($idRecurso){
+        //dd($idRecurso);
+        //borro todos sus horarios
+        DB::table('tb_recursos')
+            ->where('tb_recursos.idRecurso', $idRecurso)
+            ->delete();
+        
+            return redirect("/recursosLista")->with('ConfirmarBorradoRecurso','OK');
+     }
+
+     public function estadisticas(){
+        //extras a enviar
+        $TiposDeDocumentos = DB::table('tb_tiposdedocumento')->get();
+        $TiposDeAgentes = DB::table('tb_tiposdeagente')->get();
+        $Sexos = DB::table('tb_sexo')->get();
+        $EstadosCiviles = DB::table('tb_estadosciviles')->get();
+        $Nacionalidades = DB::table('tb_nacionalidad')->get();
+        $Modos = DB::table('tb_modos')
+        ->where(function ($query) {
+            $query->where('tb_modos.idModo', '=', 1)
+                ->orWhere('tb_modos.idModo', '=', 3);
+        })
+        ->get();
+
+        $Usuario = DB::table('tb_usuarios')
+        ->where('tb_usuarios.Modo','!=',2)
+        ->where('tb_usuarios.idusuario',1) //es and
+        ->get();
+        //dd($RelSubOrgAgente);
+        $datos=array(
+            'mensajeError'=>"",
+            'mensajeNAV'=>'Panel Estadistico',
+            'Usuario'=>$Usuario,
+            'Modos'=>$Modos
+        );
+        //dd($infoPlaza);
+        return view('bandeja.ADMIN.estadisticas',$datos);
+    }
 
 
-
-
-
-
+     //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
 
 
 

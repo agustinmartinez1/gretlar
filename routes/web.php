@@ -11,8 +11,8 @@ use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\SistemaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-
-
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\RecursoController;
 //mail
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EjemploMail;
@@ -130,6 +130,7 @@ Route::get('/selecionarEscuela',[AdminController::class,'selecionarEscuela'])->n
 Route::get('/asignarRecursoEscuela/{idEscuela}',[AdminController::class,'asignarRecursoEscuela'])->name('asignarRecursoEscuela');
 Route::post('/FormAgregarRec',[AdminController::class,'FormAgregarRec'])->name('FormAgregarRec');
 Route::post('/FormDevolverRec',[AdminController::class,'FormDevolverRec'])->name('FormDevolverRec');
+Route::get('/eliminarRecurso/{idRecurso}',[AdminController::class,'eliminarRecurso'])->name('eliminarRecurso');
 
 //pedidos
 Route::get('/insumosEscuela',[AdminController::class,'insumosEscuela'])->name('insumosEscuela');
@@ -144,9 +145,13 @@ Route::post('/editarPedidoST',[AdminController::class,'editarPedidoST'])->name('
 Route::post('/informarPedidoST',[AdminController::class,'informarPedidoST'])->name('informarPedidoST');
 Route::get('/pedidosTerminados',[AdminController::class,'pedidosTerminados'])->name('pedidosTerminados');
 
+//estadisticas
+Route::get('/estadisticas',[AdminController::class,'estadisticas'])->name('estadisticas');
 
-
-
+//servicio GPT
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::post('/chat/get-response', [ChatController::class, 'getResponse'])->name('chat.getResponse');
+Route::post('/buscar-recurso', [RecursoController::class, 'buscarRecurso'])->name('buscar-recurso');
 
 
 

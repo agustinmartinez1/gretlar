@@ -108,7 +108,7 @@
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->
                         <div class="col-md-10">
-                            <div class="card card-lightblue">
+                            <div class="card card-orange">
                                 <div class="card-header">
                                     <h3 class="card-title">Escuela: <b>{{$EscuelaInfo[0]->Descripcion}}</b> - CUE:<b>{{$EscuelaInfo[0]->CUE}} / {{$EscuelaInfo[0]->cuecompleto}}</b> </h3>&nbsp; 
                                 </div>

@@ -12,6 +12,13 @@
                 <div class="container-fluid">
                     <!-- Buscador Agente -->
                     <h4 class="text-center display-4">Editar Recurso</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: Recuerde editar de forma clara, con datos claros y legitimos, que permitan una b&uacute;squeda sencilla del recurso.
+
+
+                    </div>
                     <!-- Agregar Nuevo Agente -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->

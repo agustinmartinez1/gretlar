@@ -11,7 +11,13 @@
             <section class="content">
                 <div class="container-fluid">
                     <!-- Buscador Agente -->
-                    <h4 class="text-center display-4">Agregar Usuario Nuevo</h4>
+                    <h4 class="text-center display-4">Usuarios Creados</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: En esta lista, figuran los Roles: Administradores, Autogesti&oacute;n Escolar y T&eacute;cnicos.<br>
+                        Puede usar el buscador para filtrar por cualquier dato presente y puede usar la ultima columna para editar los valores de una persona especifica.
+                    </div>
                     <!-- Agregar Nuevo Agente -->
                    
                     <div class="row d-flex justify-content-center">

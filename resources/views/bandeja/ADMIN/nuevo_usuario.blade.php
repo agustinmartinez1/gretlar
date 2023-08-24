@@ -11,7 +11,12 @@
             <section class="content">
                 <div class="container-fluid">
                     <!-- Buscador Agente -->
-                    <h4 class="text-center display-4">Agregar Usuario Nuevo T&eacute;cnico</h4>
+                    <h4 class="text-center display-4">Agregar Usuario Nuevo</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: Todos los usuarios creados, por defecto seran del Rol T&eacute;cnico.
+                      </div>
                     <!-- Agregar Nuevo Agente -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->

@@ -12,6 +12,15 @@
                 <div class="container-fluid">
                     <!-- Buscador Rec -->
                     <h4 class="text-center display-4">Listado General de Escuelas Habilitadas</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: En este panel aparecen las escuelas que fueron agregadas como habilitadas para recibir recursos, 
+                            se podr&aacute; editar para agregarle recursos, podr&aacute; observar cuantos recursos tienen, 
+                            y podr&aacute;n solicitar la devoluci&oacute;n del recurso(previa nota 
+                            formal a la direcci&oacute;n general de sistema)
+                    </div>
+
                     <!-- Agregar Nuevo Rec -->
                    
                     <div class="row d-flex justify-content-center">

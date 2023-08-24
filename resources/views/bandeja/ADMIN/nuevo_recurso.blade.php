@@ -12,6 +12,12 @@
                 <div class="container-fluid">
                     <!-- Buscador Recurso -->
                     <h4 class="text-center display-4">Agregar Recurso</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: Los recursos, son los elementos clave de toda organizaci&oacute;n, usted puede determinar que tipo de recurso crear, como se encuentra al momento de su creaci&oacute;n y sus caracter&iacute;sticas.
+
+                    </div>
                     <!-- Agregar Nuevo Recurso -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->

@@ -12,6 +12,11 @@
                 <div class="container-fluid">
                     <!-- Buscador Agente -->
                     <h4 class="text-center display-4">Editar Usuario</h4>
+                    <div class="alert alert-info alert-dismissible justify-content-center col-md-10" style="margin:0 auto">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Alerta</h5>
+                        Informaci&oacute;n: En esta zona, usted podra editar un usuario, solo los Administradores pueden editar, tambien podran cambiar su Rol.
+                    </div>
                     <!-- Agregar Nuevo Agente -->
                     <div class="row d-flex justify-content-center">
                         <!-- left column -->
