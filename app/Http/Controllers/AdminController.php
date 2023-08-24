@@ -480,12 +480,14 @@ class AdminController extends Controller
          )
          ->get();
         
-         $MisRecursos = DB::table('tb_recursos')
+         /*$MisRecursos = DB::table('tb_recursos')
          ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
          ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
          ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
          ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
          ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+         ->join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso')
+
          ->where('tb_repositorio.idSubOrganizacion',session('idSubOrganizacion'))
          ->select(
              'tb_usuarios.*',
@@ -496,7 +498,34 @@ class AdminController extends Controller
              'tb_tipo_estados.*',
              'tb_repositorio.*'
          )
-         ->get();
+         ->get();*/
+         $MisRecursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+        ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+        //->leftJoin('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso') // Usamos LEFT JOIN para incluir recursos sin pedidos
+
+        ->where('tb_repositorio.idSubOrganizacion', session('idSubOrganizacion'))
+        
+        //   ->where(function ($query) {
+        //       $query->where('tb_pedidos.Activo', '=', 1)
+        //         ->orWhere('tb_pedidos.Activo', '=', 3)
+        //         ->orWhereNull('tb_pedidos.idRecurso');;
+
+        //   })
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*',
+            'tb_repositorio.*',
+            //'tb_pedidos.*'
+        )
+        ->get();
         //dd($EscuelaInfo);
          $datos=array(
              'mensajeError'=>"",
@@ -512,7 +541,7 @@ class AdminController extends Controller
      public function crearPedido(Request $request){
 
         
-        dd($request);
+        //dd($request);
         /*
          "_token" => "FbxuUNBFAYoMLcLyrmR1rnVJGcWZF21osEGqOi0V"
         "Observaciones" => "la pantalla se apaga y prende"
@@ -523,18 +552,360 @@ class AdminController extends Controller
         $o = new PedidoModel();
           $o->idRecurso = $request->recurso;
           $o->ObservacionesPedido = $request->Observaciones;
-          $o->idUsuarioEscuela = session('idUsuario');
+          $o->idUsuarioEscuela = session('idUsuario'); //escuela
+          $o->Activo = 0; //en transiciones
+          $o->idTipoEstado = 3; //en transiciones
+          //$o->idTipoEstado = 3;
         $o->save();
         
-        //cambio su estado
+        //cambio su estado para avisar que esta en reparacion
         $o = RecursoModel::where('idRecurso', $request->recurso)->first();
-            $o->idTipoEstado = 9;
+            $o->idTipoEstado = 3; //en espera de reparacion
         $o->save();
         
         $idSubOrg = $request->sub;
-        return redirect("/asignarRecursoEscuela/$idSubOrg")->with('ConfirmarNuevoRecursoAgregado','OK');
+        return redirect("/insumosEscuela")->with('ConfirmarRecursoEnvioST','OK');
 
     }
+
+    public function pedidosEscuela(){
+       //extras a enviar
+ 
+        //busco datos de la escuela
+        $EscuelaInfo = DB::table('tb_suborganizaciones')
+         ->where('tb_suborganizaciones.idSubOrganizacion',session('idSubOrganizacion'))         
+         ->get();
+ 
+         //consulta de recursos, todos
+         $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+         ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+         ->select(
+             'tb_suborganizaciones.*',
+             'tb_reparticiones.*'
+         )
+         ->get();
+        
+         /*$MisRecursos = DB::table('tb_recursos')
+         ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+         ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+         ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+         ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+         ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+         ->join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso')
+
+         ->where('tb_repositorio.idSubOrganizacion',session('idSubOrganizacion'))
+         ->select(
+             'tb_usuarios.*',
+             'tb_modos.*',
+             'tb_recursos.*',
+             'tb_recursos.created_at as FechaAlta',
+             'tb_tipo_recursos.*',
+             'tb_tipo_estados.*',
+             'tb_repositorio.*'
+         )
+         ->get();*/
+         $Estados = DB::table('tb_tipo_estados')
+          ->where(function ($query) {
+            $query->where('tb_tipo_estados.idTipoEstado', '=', 3)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 4)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 5)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 6)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 7)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 8);
+        })
+          ->get();
+
+         $MisRecursos = DB::table('tb_recursos')
+        ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+        ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+        ->Join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso') // Usamos LEFT JOIN para incluir recursos sin pedidos
+
+        ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+        ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_pedidos.idTipoEstado')
+        ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+
+        ->where('tb_repositorio.idSubOrganizacion', session('idSubOrganizacion'))
+        
+       // ->whereNull('tb_pedidos.idRecurso') // Filtramos solo los recursos sin pedidos
+        ->select(
+            'tb_usuarios.*',
+            'tb_modos.*',
+            'tb_recursos.*',
+            'tb_recursos.created_at as FechaAlta',
+            'tb_tipo_recursos.*',
+            'tb_tipo_estados.*',
+            'tb_repositorio.*',
+            'tb_pedidos.*'
+        )
+        ->get();
+        //dd($EscuelaInfo);
+         $datos=array(
+             'mensajeError'=>"",
+             'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+             'mensajeNAV'=>'Panel de Configuración de Escuelas',
+             'EscuelaInfo'=>$EscuelaInfo,
+             'MisRecursos'=>$MisRecursos,
+             'Estados'=>$Estados
+             
+         );
+         return view('bandeja.ADMIN.pedidos_escuela_lista',$datos);                
+    }
+
+    public function cancelarPedido(Request $request){
+
+        
+        //dd($request);
+        /*
+         "_token" => "FbxuUNBFAYoMLcLyrmR1rnVJGcWZF21osEGqOi0V"
+        "Observaciones" => "la pantalla se apaga y prende"
+        "recurso" => "3"  
+        */
+       
+        //borro el pedido porque no lo vio el tecnico
+        DB::table('tb_pedidos')
+        ->where('tb_pedidos.idPedido', $request->pedido)
+        ->delete();
+
+        //cambio su estado para avisar que esta en reparacion
+        $o = RecursoModel::where('idRecurso', $request->recurso)->first();
+            $o->idTipoEstado = 9; //en espera de reparacion
+        $o->save();
+        
+        $idSubOrg = $request->sub;
+        return redirect("/insumosEscuela")->with('ConfirmarRecursoEnvioST','OK');
+
+    }
+
+
+    //servici tecnico
+    public function controlPedidos(){
+        //extras a enviar
+  
+         //busco datos de la escuela
+         $EscuelaInfo = DB::table('tb_suborganizaciones')
+          ->where('tb_suborganizaciones.idSubOrganizacion',session('idSubOrganizacion'))         
+          ->get();
+  
+          //consulta de recursos, todos
+          $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+          ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+          ->select(
+              'tb_suborganizaciones.*',
+              'tb_reparticiones.*'
+          )
+          ->get();
+         
+          $Estados = DB::table('tb_tipo_estados')
+          ->where(function ($query) {
+            $query->where('tb_tipo_estados.idTipoEstado', '=', 3)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 4)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 5)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 6)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 7)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 8);
+        })
+          ->get();
+
+          /*$MisRecursos = DB::table('tb_recursos')
+          ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+          ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+          ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+          ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+          ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+          ->join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso')
+ 
+          ->where('tb_repositorio.idSubOrganizacion',session('idSubOrganizacion'))
+          ->select(
+              'tb_usuarios.*',
+              'tb_modos.*',
+              'tb_recursos.*',
+              'tb_recursos.created_at as FechaAlta',
+              'tb_tipo_recursos.*',
+              'tb_tipo_estados.*',
+              'tb_repositorio.*'
+          )
+          ->get();*/
+          $MisRecursos = DB::table('tb_recursos')
+         ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+         ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+         ->Join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso') // Usamos LEFT JOIN para incluir recursos sin pedidos
+
+         ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+         ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_pedidos.idTipoEstado')
+         ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+ 
+         //->where('tb_repositorio.idSubOrganizacion', session('idSubOrganizacion'))
+        // ->whereNull('tb_pedidos.idRecurso') // Filtramos solo los recursos sin pedidos
+        ->where(function ($query) {
+            $query->where('tb_pedidos.Activo', '=', 0)
+                ->orWhereNull('tb_pedidos.idRecurso');
+        })
+        ->select(
+             'tb_usuarios.*',
+             'tb_modos.*',
+             'tb_recursos.*',
+             'tb_recursos.created_at as FechaAlta',
+             'tb_tipo_recursos.*',
+             'tb_tipo_estados.*',
+             'tb_repositorio.*',
+             'tb_pedidos.*'
+         )
+         ->get();
+         //dd($EscuelaInfo);
+          $datos=array(
+              'mensajeError'=>"",
+              'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+              'mensajeNAV'=>'Panel de Configuración de Escuelas',
+              'EscuelaInfo'=>$EscuelaInfo,
+              'MisRecursos'=>$MisRecursos,
+              'Estados'=>$Estados
+              
+          );
+          return view('bandeja.ADMIN.control_pedidos_st',$datos);                
+     }
+
+     public function editarPedidoST(Request $request){
+
+        
+        //dd($request);
+        /*
+         "_token" => "FbxuUNBFAYoMLcLyrmR1rnVJGcWZF21osEGqOi0V"
+        "Observaciones" => "la pantalla se apaga y prende"
+        "recurso" => "3" 
+        'pedido llega 
+        */
+
+        //cambio su estado para avisar que esta en reparacion
+        $o = PedidoModel::where('idPedido', $request->pedido)
+        ->orWhere(function ($query) {
+            $query->where('Activo', 0);
+        })
+        ->first();
+            $o->idTipoEstado = $request->estado; //en espera de reparacion
+        $o->save();
+        
+        $idSubOrg = $request->sub;
+        return redirect("/controlPedidos")->with('ConfirmarCambiodeEstadoST','OK');
+
+    }
+
+    public function informarPedidoST(Request $request){
+
+        
+        //dd($request);
+        /*
+         "_token" => "Edx54yVHHgajAgZWP7RRr61aZgxPIOuMw4PswHKw"
+      "ObservacionesEscuela" => "pantalla rota"
+      "ObservacionesTecnico" => "no se tiene repuesto por ahora"
+      "recurso" => "3"
+      "pedido" => "4"
+        */
+
+        //cambio su observacion y lo desactivo
+        $o = PedidoModel::where('idPedido', $request->pedido)->first();
+            $o->ObservacionesTecnico = $request->ObservacionesTecnico; //en espera de reparacion
+            $o->Activo = 1; //terminado
+        $o->save();
+        
+        //restablesco segun critero el recurso
+        $o = RecursoModel::where('idRecurso', $request->recurso)->first();
+            $o->idTipoEstado = 9; 
+        $o->save();
+        $idSubOrg = $request->sub;
+        return redirect("/controlPedidos")->with('ConfirmarRepST','OK');
+
+    }
+
+    public function pedidosTerminados(){
+        //extras a enviar
+  
+         //busco datos de la escuela
+         $EscuelaInfo = DB::table('tb_suborganizaciones')
+          ->where('tb_suborganizaciones.idSubOrganizacion',session('idSubOrganizacion'))         
+          ->get();
+  
+          //consulta de recursos, todos
+          $EscuelasHabilitadas = DB::table('tb_suborganizaciones')
+          ->join('tb_reparticiones', 'tb_reparticiones.subOrganizacion', '=', 'tb_suborganizaciones.idSubOrganizacion')
+          ->select(
+              'tb_suborganizaciones.*',
+              'tb_reparticiones.*'
+          )
+          ->get();
+         
+          $Estados = DB::table('tb_tipo_estados')
+          ->where(function ($query) {
+            $query->where('tb_tipo_estados.idTipoEstado', '=', 3)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 4)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 5)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 6)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 7)
+                ->orWhere('tb_tipo_estados.idTipoEstado', '=', 8);
+        })
+          ->get();
+
+          /*$MisRecursos = DB::table('tb_recursos')
+          ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+          ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+          ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+          ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_recursos.idTipoEstado')
+          ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+          ->join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso')
+ 
+          ->where('tb_repositorio.idSubOrganizacion',session('idSubOrganizacion'))
+          ->select(
+              'tb_usuarios.*',
+              'tb_modos.*',
+              'tb_recursos.*',
+              'tb_recursos.created_at as FechaAlta',
+              'tb_tipo_recursos.*',
+              'tb_tipo_estados.*',
+              'tb_repositorio.*'
+          )
+          ->get();*/
+          $MisRecursos = DB::table('tb_recursos')
+         ->join('tb_usuarios', 'tb_usuarios.idUsuario', '=', 'tb_recursos.idUsuario')
+         ->join('tb_modos', 'tb_modos.idModo', '=', 'tb_usuarios.Modo')
+         ->Join('tb_pedidos', 'tb_pedidos.idRecurso', '=', 'tb_recursos.idRecurso') // Usamos LEFT JOIN para incluir recursos sin pedidos
+
+         ->join('tb_tipo_recursos', 'tb_tipo_recursos.idTipoRecurso', '=', 'tb_recursos.idTipoRecurso')
+         ->join('tb_tipo_estados', 'tb_tipo_estados.idTipoEstado', '=', 'tb_pedidos.idTipoEstado')
+         ->join('tb_repositorio', 'tb_repositorio.idRecurso', '=', 'tb_recursos.idRecurso')
+ 
+         //->where('tb_repositorio.idSubOrganizacion', session('idSubOrganizacion'))
+        // ->whereNull('tb_pedidos.idRecurso') // Filtramos solo los recursos sin pedidos
+        ->where(function ($query) {
+            $query->where('tb_pedidos.Activo', '=', 1)
+                ->orWhereNull('tb_pedidos.idRecurso');
+        })
+        ->select(
+             'tb_usuarios.*',
+             'tb_modos.*',
+             'tb_recursos.*',
+             'tb_recursos.created_at as FechaAlta',
+             'tb_tipo_recursos.*',
+             'tb_tipo_estados.*',
+             'tb_repositorio.*',
+             'tb_pedidos.*'
+         )
+         ->get();
+         //dd($EscuelaInfo);
+          $datos=array(
+              'mensajeError'=>"",
+              'EscuelasHabilitadas'=>$EscuelasHabilitadas,
+              'mensajeNAV'=>'Panel de Configuración de Escuelas',
+              'EscuelaInfo'=>$EscuelaInfo,
+              'MisRecursos'=>$MisRecursos,
+              'Estados'=>$Estados
+              
+          );
+          return view('bandeja.ADMIN.pedidos_terminados_st',$datos);                   
+     }
+
+
+
+
+
 
 
 

@@ -4514,11 +4514,8 @@ tr.odd.gradeX td.sorting_1, tr.even.gradeX td.sorting_1, table.display tr.even.g
 
 .lock-wrapper img {
     position: absolute;
-    left: 40%;
-    top: -40px;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border: 5px solid #fff;
+    left: 20%;
+
 }
 
 .lock-wrapper h1 {

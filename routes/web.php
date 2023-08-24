@@ -135,6 +135,14 @@ Route::post('/FormDevolverRec',[AdminController::class,'FormDevolverRec'])->name
 Route::get('/insumosEscuela',[AdminController::class,'insumosEscuela'])->name('insumosEscuela');
 Route::post('/crearPedido',[AdminController::class,'crearPedido'])->name('crearPedido');
 
+Route::get('/pedidosEscuela',[AdminController::class,'pedidosEscuela'])->name('pedidosEscuela');
+Route::post('/cancelarPedido',[AdminController::class,'cancelarPedido'])->name('cancelarPedido');
+
+//servicio tecnico
+Route::get('/controlPedidos',[AdminController::class,'controlPedidos'])->name('controlPedidos');
+Route::post('/editarPedidoST',[AdminController::class,'editarPedidoST'])->name('editarPedidoST');
+Route::post('/informarPedidoST',[AdminController::class,'informarPedidoST'])->name('informarPedidoST');
+Route::get('/pedidosTerminados',[AdminController::class,'pedidosTerminados'])->name('pedidosTerminados');
 
 
 

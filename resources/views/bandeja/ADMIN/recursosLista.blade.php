@@ -50,9 +50,22 @@
                                                 $color="";
                                                     if($nag->idTipoEstado == 1) $color="green";
                                                     if($nag->idTipoEstado == 2) $color="red";
-                                                    if($nag->idTipoEstado == 9) $color="info";
+                                                    if($nag->idTipoEstado == 9) $color="#28B463";
+
+                                                    if($nag->idTipoEstado == 3) $color="#FCF3CF";   //tono amarillo claro
+                                                    if($nag->idTipoEstado == 4) $color="#AED6F1";   //tono amarillo claro
+                                                    if($nag->idTipoEstado == 5) $color="#58D68D";   //tono amarillo claro
+                                                    if($nag->idTipoEstado == 6) $color="#8C4966";   //tono rosado-morado
+                                                    if($nag->idTipoEstado == 7) $color="#8C4966";   //idem
+                                                    if($nag->idTipoEstado == 8) $color="#117864";   //tono amarillo claro
                                                 @endphp
-                                                <td class="text-center bg-{{$color}}">{{$nag->Nombre_Estado}}</td>
+                                                <td class="text-center" style="background-color: {{$color}}">
+                                                    @if ($nag->idTipoEstado >= 3 && $nag->idTipoEstado <= 8)
+                                                        <i class="fa fa-cog"> {{$nag->Nombre_Estado}}</i>
+                                                    @else
+                                                        {{$nag->Nombre_Estado}}
+                                                    @endif    
+                                                </td>
                                                 <td class="text-center">{{$nag->Cantidad_Recurso}}</td>
                                                 <td>{{$nag->Observaciones}}</td>
                                                 <td class="text-center">{{$nag->Nombre}}({{$nag->Descripcion}})</td>

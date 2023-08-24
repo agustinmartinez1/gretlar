@@ -195,7 +195,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('usuariosLista')}}" class="nav-link">
+                <a href="{{route('pedidosEscuela')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Listar Pedidos</p>
                 </a>
@@ -265,58 +265,6 @@
             </ul>
           </li>
 
-          <li class="nav-item menu-is-opening menu-open">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Gestion de pedidos
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right"><!--aqui algo--></span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{route('nuevoUsuario')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Nuevo Usuario</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('usuariosLista')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Buscar y Administrar Usuarios</p>
-                </a>
-              </li>
-              
-            </ul>
-          </li>
-
-          <li class="nav-item menu-is-opening menu-open">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Soporte tecnico 
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right"><!--aqui algo--></span>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{route('nuevoUsuario')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Nuevo Usuario</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('usuariosLista')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Buscar y Administrar Usuarios</p>
-                </a>
-              </li>
-              
-            </ul>
-          </li>
-
          
         @endif
 
@@ -334,18 +282,17 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{route('nuevoUsuario')}}" class="nav-link">
+                <a href="{{route('controlPedidos')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Controlar Nuevos Agentes</p>
+                  <p>Controlar Pedidos</p>
                 </a>
-              </li>
+              </li> 
               <li class="nav-item">
-                <a href="{{route('nuevoUsuario')}}" class="nav-link">
+                <a href="{{route('pedidosTerminados')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Ver Instituciones / Datos</p>
+                  <p>Listar Pedidos Terminados</p>
                 </a>
               </li>
-              
             </ul>
           </li>          
         @endif 
